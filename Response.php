@@ -64,7 +64,7 @@ class Response implements Response\ResponseInterface
     /**
      * gets the response as string
      *
-     * @return type
+     * @return string
      */
     public function __toString()
     {
@@ -110,7 +110,8 @@ class Response implements Response\ResponseInterface
     /**
      * add a cookie to the response
      *
-     * @param  \Iridium\Components\HttpStack\Cookie\CookieInterface $cookie
+     * @param \Iridium\Components\HttpStack\Cookie\CookieInterface $cookie
+     *
      * @return \Iridium\Components\HttpStack\Response
      */
     public function addCookie(Cookie\CookieInterface $cookie)
@@ -123,7 +124,8 @@ class Response implements Response\ResponseInterface
     /**
      * add a header to the response
      *
-     * @param  \Iridium\Components\HttpStack\Header\HeaderInterface $header
+     * @param \Iridium\Components\HttpStack\Header\HeaderInterface $header
+     *
      * @return \Iridium\Components\HttpStack\Response
      */
     public function addHeader(Header\HeaderInterface $header)
@@ -136,7 +138,8 @@ class Response implements Response\ResponseInterface
     /**
      * add text to the response body
      *
-     * @param  string                 $text
+     * @param string $text
+     *
      * @return \Iridium\Components\HttpStack\Response
      */
     public function addToBody($text)
@@ -150,6 +153,8 @@ class Response implements Response\ResponseInterface
      * send only headers and cookies (for HEAD requests)
      *
      * @param bool $active
+     *
+     * @return \Iridium\Components\HttpStack\Response
      */
     public function headOnly($active = true)
     {

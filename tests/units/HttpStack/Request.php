@@ -127,8 +127,7 @@ class Request extends atoum
         // on teste une méthode inconnue pour voir si elle lève une exception
         $_SERVER[ 'REQUEST_URI' ]    = '/index.php';
         $_SERVER[ 'REQUEST_METHOD' ] = 'METHODE_BLABLABLA';
-        $this->exception( function()
-                {
+        $this->exception( function () {
                     $req = new IrRequest();
                 } )
                 ->isInstanceOf( '\UnexpectedValueException' );
@@ -150,7 +149,6 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_URI' ]    = '/index.php';
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_GET;
         $req                         = new IrRequest();
-
 
         // HTTP_REFERER
         $this->variable( $req->getReferer() )
@@ -179,7 +177,6 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_URI' ]    = '/index.php';
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_GET;
         $req                         = new IrRequest();
-
 
         // HTTP_ACCEPT_LANGUAGE
         $this->variable( $req->getLanguage() )
@@ -291,8 +288,7 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_POST;
         $req                         = new IrRequest();
 
-        $this->exception( function() use ($req)
-                {
+        $this->exception( function () use ($req) {
                     $req->get( 'test' );
                 } )
                 ->isInstanceOf( '\BadMethodCallException' )
@@ -319,8 +315,7 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_POST;
         $req                         = new IrRequest();
 
-        $this->exception( function() use ($req)
-                {
+        $this->exception( function () use ($req) {
                     $req->put( 'test' );
                 } )
                 ->isInstanceOf( '\BadMethodCallException' )
@@ -347,8 +342,7 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_GET;
         $req                         = new IrRequest();
 
-        $this->exception( function() use ($req)
-                {
+        $this->exception( function () use ($req) {
                     $req->post( 'test' );
                 } )
                 ->isInstanceOf( '\BadMethodCallException' )
@@ -375,8 +369,7 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_POST;
         $req                         = new IrRequest();
 
-        $this->exception( function() use ($req)
-                {
+        $this->exception( function () use ($req) {
                     $req->patch( 'test' );
                 } )
                 ->isInstanceOf( '\BadMethodCallException' )
@@ -403,8 +396,7 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_POST;
         $req                         = new IrRequest();
 
-        $this->exception( function() use ($req)
-                {
+        $this->exception( function () use ($req) {
                     $req->delete( 'test' );
                 } )
                 ->isInstanceOf( '\BadMethodCallException' )
@@ -431,8 +423,7 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_POST;
         $req                         = new IrRequest();
 
-        $this->exception( function() use ($req)
-                {
+        $this->exception( function () use ($req) {
                     $req->head( 'test' );
                 } )
                 ->isInstanceOf( '\BadMethodCallException' )
@@ -459,8 +450,7 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_POST;
         $req                         = new IrRequest();
 
-        $this->exception( function() use ($req)
-                {
+        $this->exception( function () use ($req) {
                     $req->options( 'test' );
                 } )
                 ->isInstanceOf( '\BadMethodCallException' )
@@ -488,8 +478,7 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_POST;
         $req                         = new IrRequest();
 
-        $this->exception( function() use ($req)
-                {
+        $this->exception( function () use ($req) {
                     $req->trace( 'test' );
                 } )
                 ->isInstanceOf( '\BadMethodCallException' )

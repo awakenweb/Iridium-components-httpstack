@@ -12,8 +12,7 @@ class Cookie extends atoum
 
     public function testCookieCreate()
     {
-        $this->exception( function()
-                {
+        $this->exception( function () {
                     $cookie = new IrCookie( '' );
                 } )
                 ->isInstanceOf( '\InvalidArgumentException' );
@@ -28,7 +27,7 @@ class Cookie extends atoum
     /**
      * @dataProvider toStringProvider
      */
-    public function testToString( $name , $value , $expire , $path , $domain , $secure , $httponly , $finalstring )
+    public function testToString($name , $value , $expire , $path , $domain , $secure , $httponly , $finalstring)
     {
         $cookie = new IrCookie( $name );
 
