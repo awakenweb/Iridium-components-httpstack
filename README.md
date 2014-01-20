@@ -1,5 +1,8 @@
 Iridium Components Http Stack
 ===========================
+
+[![Build Status](https://travis-ci.org/awakenweb/Iridium-components-httpstack.png?branch=master)](https://travis-ci.org/awakenweb/Iridium-components-httpstack)
+
 HTTP Stack for Iridium Framework. Work as a standalone library but best used with full stack framework
 
 This component contains 4 main elements:
