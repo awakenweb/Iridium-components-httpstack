@@ -72,23 +72,23 @@ interface RequestInterface
 
     public function isDelete();
 
-    public function get( $name , $value = null );
+    public function get($name = null, $value = null);
 
-    public function put( $name , $value = null );
+    public function put($name = null, $value = null);
 
-    public function post( $name , $value = null );
+    public function post($name = null, $value = null);
 
-    public function patch( $name , $value = null );
+    public function patch($name = null, $value = null);
 
-    public function delete( $name , $value = null );
+    public function delete($name = null, $value = null);
 
-    public function head( $name , $value = null );
+    public function head($name = null, $value = null);
 
-    public function trace( $name , $value = null );
+    public function trace($name = null, $value = null);
 
-    public function options( $name , $value = null );
+    public function options($name = null, $value = null);
 
-    public function cookie( $name );
+    public function cookie($name = null);
 
     public function getLanguage();
 }

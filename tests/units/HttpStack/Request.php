@@ -274,6 +274,8 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_GET;
         $req                         = new IrRequest();
 
+        $this->array($req->get());
+
         $this->variable( $req->get( 'test' ) )
                 ->isNull();
 
@@ -300,6 +302,8 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_URI' ]    = '/index.php';
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_PUT;
         $req                         = new IrRequest();
+
+        $this->array($req->put());
 
         $this->variable( $req->put( 'test' ) )
                 ->isNull();
@@ -328,6 +332,8 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_POST;
         $req                         = new IrRequest();
 
+        $this->array($req->post());
+
         $this->variable( $req->post( 'test' ) )
                 ->isNull();
 
@@ -354,6 +360,8 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_URI' ]    = '/index.php';
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_PATCH;
         $req                         = new IrRequest();
+
+        $this->array($req->patch());
 
         $this->variable( $req->patch( 'test' ) )
                 ->isNull();
@@ -382,6 +390,8 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_DELETE;
         $req                         = new IrRequest();
 
+        $this->array($req->delete());
+
         $this->variable( $req->delete( 'test' ) )
                 ->isNull();
 
@@ -409,6 +419,8 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_HEAD;
         $req                         = new IrRequest();
 
+        $this->array($req->head());
+
         $this->variable( $req->head( 'test' ) )
                 ->isNull();
 
@@ -435,6 +447,8 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_URI' ]    = '/index.php';
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_OPTIONS;
         $req                         = new IrRequest();
+
+        $this->array($req->options());
 
         $this->variable( $req->options( 'test' ) )
                 ->isNull();
@@ -464,6 +478,8 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_TRACE;
         $req                         = new IrRequest();
 
+        $this->array($req->trace());
+
         $this->variable( $req->trace( 'test' ) )
                 ->isNull();
 
@@ -490,6 +506,8 @@ class Request extends atoum
         $_SERVER[ 'REQUEST_URI' ]    = '/index.php';
         $_SERVER[ 'REQUEST_METHOD' ] = IrRequest::METHOD_GET;
         $req                         = new IrRequest();
+
+        $this->array($req->cookie());
 
         $this->variable( $req->cookie( 'test' ) )
                 ->isNull();

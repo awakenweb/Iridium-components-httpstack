@@ -60,7 +60,8 @@ class Request implements Request\RequestInterface
             case self::METHOD_POST:
                 if (empty($_POST)) {
                     $this->post = json_decode(file_get_contents('php://input'));
-                } else {
+                }
+                if (is_null($this->post)) {
                     $this->post = $_POST;
                 }
                 break;
@@ -299,20 +300,25 @@ class Request implements Request\RequestInterface
     }
 
     /**
-     * alias for $_GET[$name]
+     * gets the $name value from the GET array.
+     * If $value is not null, sets the value instead
+     * If no parameters are passed, returns all the values as an array
+     * (alias for $_GET[$name])
      *
      * @param string $name
      * @param string $value
      *
-     * @return string|null|Iridium\Request
+     * @return string|null|array|Iridium\Request
      * @throws \BadMethodCallException
      */
-    public function get($name, $value = null)
+    public function get($name = null, $value = null)
     {
         if (!$this->isGet()) {
             throw new \BadMethodCallException('calling get() while HTTP verb is not GET');
         }
-        if (is_null($value)) {
+        if (is_null($name)) {
+            return $_GET;
+        } elseif (is_null($value)) {
             return isset($_GET[$name]) ? $_GET[$name] : null;
         } else {
             $_GET[$name] = $value;
@@ -324,20 +330,23 @@ class Request implements Request\RequestInterface
     /**
      * gets the $name value from the PUT array.
      * If $value is not null, sets the value instead
+     * If no parameters are passed, returns all the values as an array
      * (can be seen as alias for $_PUT[$name])
      *
      * @param string $name
      * @param string $value
      *
-     * @return string|null|Iridium\Request
+     * @return string|null|array|Iridium\Request
      * @throws \BadMethodCallException
      */
-    public function put($name, $value = null)
+    public function put($name = null, $value = null)
     {
         if (!$this->isPut()) {
             throw new \BadMethodCallException('calling put() while HTTP verb is not PUT');
         }
-        if (is_null($value)) {
+        if (is_null($name)) {
+            return $this->put;
+        } elseif (is_null($value)) {
             return isset($this->put[$name]) ? $this->put[$name] : null;
         } else {
             $this->put[$name] = $value;
@@ -347,20 +356,25 @@ class Request implements Request\RequestInterface
     }
 
     /**
-     * alias for $_POST[$name]
+     * gets the $name value from the POST array.
+     * If $value is not null, sets the value instead
+     * If no parameters are passed, returns all the values as an array
+     * (can be seen as alias for $_POST[$name])
      *
      * @param string $name
      * @param string $value
      *
-     * @return string|null|Iridium\Request
+     * @return string|null|array|Iridium\Request
      * @throws \BadMethodCallException
      */
-    public function post($name, $value = null)
+    public function post($name = null, $value = null)
     {
         if (!$this->isPost()) {
             throw new \BadMethodCallException('calling post() while HTTP verb is not POST');
         }
-        if (is_null($value)) {
+        if (is_null($name)) {
+            return $this->post;
+        } elseif (is_null($value)) {
             return isset($this->post[$name]) ? $this->post[$name] : null;
         } else {
             $this->post[$name] = $value;
@@ -372,20 +386,23 @@ class Request implements Request\RequestInterface
     /**
      * gets the $name value from the PATCH array.
      * If $value is not null, sets the value instead
+     * If no parameters are passed, returns all the values as an array
      * (can be seen as alias for $_PATCH[$name])
      *
      * @param string $name
      * @param string $value
      *
-     * @return string|Iridium\Request
+     * @return string|null|array|Iridium\Request
      * @throws \BadMethodCallException
      */
-    public function patch($name, $value = null)
+    public function patch($name = null, $value = null)
     {
         if (!$this->isPatch()) {
             throw new \BadMethodCallException('calling patch() while HTTP verb is not PATCH');
         }
-        if (is_null($value)) {
+        if (is_null($name)) {
+            return $this->patch;
+        } elseif (is_null($value)) {
             return isset($this->patch[$name]) ? $this->patch[$name] : null;
         } else {
             $this->patch[$name] = $value;
@@ -397,20 +414,23 @@ class Request implements Request\RequestInterface
     /**
      * gets the $name value from the DELETE array.
      * If $value is not null, sets the value instead
+     * If no parameters are passed, returns all the values as an array
      * (can be seen as alias for $_DELETE[$name])
      *
      * @param string $name
      * @param string $value
      *
-     * @return string|Iridium\Request
+     * @return string|null|array|Iridium\Request
      * @throws \BadMethodCallException
      */
-    public function delete($name, $value = null)
+    public function delete($name = null, $value = null)
     {
         if (!$this->isDelete()) {
             throw new \BadMethodCallException('calling delete() while HTTP verb is not DELETE');
         }
-        if (is_null($value)) {
+        if (is_null($name)) {
+            return $this->delete;
+        } elseif (is_null($value)) {
             return isset($this->delete[$name]) ? $this->delete[$name] : null;
         } else {
             $this->delete[$name] = $value;
@@ -422,20 +442,23 @@ class Request implements Request\RequestInterface
     /**
      * rgets the $name value from the HEAD array.
      * If $value is not null, sets the value instead
+     * If no parameters are passed, returns all the values as an array
      * (can be seen as alias for $_HEAD[$name])
      *
      * @param string $name
      * @param string $value
      *
-     * @return string|Iridium\Request
+     * @return string|null|array|Iridium\Request
      * @throws \BadMethodCallException
      */
-    public function head($name, $value = null)
+    public function head($name = null, $value = null)
     {
         if (!$this->isHead()) {
             throw new \BadMethodCallException('calling head() while HTTP verb is not HEAD');
         }
-        if (is_null($value)) {
+        if (is_null($name)) {
+            return $this->head;
+        } elseif (is_null($value)) {
             return isset($this->head[$name]) ? $this->head[$name] : null;
         } else {
             $this->head[$name] = $value;
@@ -447,20 +470,23 @@ class Request implements Request\RequestInterface
     /**
      * gets the $name value from the OPTIONS array.
      * If $value is not null, sets the value instead
+     * If no parameters are passed, returns all the values as an array
      * (can be seen as alias for $_OPTIONS[$name])
      *
      * @param string $name
      * @param string $value
      *
-     * @return string|Iridium\Request
+     * @return string|null|array|Iridium\Request
      * @throws \BadMethodCallException
      */
-    public function options($name, $value = null)
+    public function options($name = null, $value = null)
     {
         if (!$this->isOptions()) {
             throw new \BadMethodCallException('calling options() while HTTP verb is not OPTIONS');
         }
-        if (is_null($value)) {
+        if (is_null($name)) {
+            return $this->options;
+        } elseif (is_null($value)) {
             return isset($this->options[$name]) ? $this->options[$name] : null;
         } else {
             $this->options[$name] = $value;
@@ -472,20 +498,23 @@ class Request implements Request\RequestInterface
     /**
      * gets the $name value from the TRACE array.
      * If $value is not null, sets the value instead
+     * If no parameters are passed, returns all the values as an array
      * (can be seen as alias for $_TRACE[$name])
      *
      * @param string $name
      * @param string $value
      *
-     * @return string|Iridium\Request
+     * @return string|null|array|Iridium\Request
      * @throws \BadMethodCallException
      */
-    public function trace($name, $value = null)
+    public function trace($name = null, $value = null)
     {
         if (!$this->isTrace()) {
             throw new \BadMethodCallException('calling trace() while HTTP verb is not TRACE');
         }
-        if (is_null($value)) {
+        if (is_null($name)) {
+            return $this->trace;
+        } elseif (is_null($value)) {
             return isset($this->trace[$name]) ? $this->trace[$name] : null;
         } else {
             $this->trace[$name] = $value;
@@ -496,12 +525,16 @@ class Request implements Request\RequestInterface
 
     /**
      * reads a value from a Cookie
+     * If no parameters are passed, returns all the values as an array
      *
-     * @param  string $name
+     * @param  string|array|null $name
      * @return type
      */
-    public function cookie($name)
+    public function cookie($name = null)
     {
+        if (is_null($name)) {
+            return $_COOKIE;
+        }
         return isset($_COOKIE[$name]) ? $_COOKIE[$name] : null;
     }
 
