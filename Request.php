@@ -45,6 +45,7 @@ class Request implements Request\RequestInterface
     protected $head          = array();
     protected $options       = array();
     protected $trace         = array();
+    protected $post          = array();
 
     /**
      * saves the URI
@@ -55,24 +56,31 @@ class Request implements Request\RequestInterface
      */
     public function __construct()
     {
-        switch ( $this->getRequestMethod() ) {
+        switch ($this->getRequestMethod()) {
+            case self::METHOD_POST:
+                if (empty($_POST)) {
+                    $this->post = json_decode(file_get_contents('php://input'));
+                } else {
+                    $this->post = $_POST;
+                }
+                break;
             case self::METHOD_PUT :
-                parse_str( file_get_contents( 'php://input' ) , $this->put );
+                parse_str(file_get_contents('php://input'), $this->put);
                 break;
             case self::METHOD_PATCH :
-                parse_str( file_get_contents( 'php://input' ) , $this->patch );
+                parse_str(file_get_contents('php://input'), $this->patch);
                 break;
             case self::METHOD_DELETE :
-                parse_str( file_get_contents( 'php://input' ) , $this->delete );
+                parse_str(file_get_contents('php://input'), $this->delete);
                 break;
             case self::METHOD_TRACE :
-                parse_str( file_get_contents( 'php://input' ) , $this->trace );
+                parse_str(file_get_contents('php://input'), $this->trace);
                 break;
             case self::METHOD_HEAD :
-                parse_str( file_get_contents( 'php://input' ) , $this->head );
+                parse_str(file_get_contents('php://input'), $this->head);
                 break;
             case self::METHOD_OPTIONS :
-                parse_str( file_get_contents( 'php://input' ) , $this->options );
+                parse_str(file_get_contents('php://input'), $this->options);
                 break;
         }
     }
@@ -84,13 +92,13 @@ class Request implements Request\RequestInterface
     public function getPathInfo()
     {
         $path_info = '/';
-        if ( ! empty( $_SERVER[ 'PATH_INFO' ] ) ) {
-            $path_info = $_SERVER[ 'PATH_INFO' ];
-        } elseif ( ! empty( $_SERVER[ 'ORIG_PATH_INFO' ] ) && $_SERVER[ 'ORIG_PATH_INFO' ] !== '/index.php' ) {
-            $path_info = $_SERVER[ 'ORIG_PATH_INFO' ];
+        if (!empty($_SERVER['PATH_INFO'])) {
+            $path_info = $_SERVER['PATH_INFO'];
+        } elseif (!empty($_SERVER['ORIG_PATH_INFO']) && $_SERVER['ORIG_PATH_INFO'] !== '/index.php') {
+            $path_info = $_SERVER['ORIG_PATH_INFO'];
         } else {
-            if ( ! empty( $_SERVER[ 'REQUEST_URI' ] ) ) {
-                $path_info = (strpos( $_SERVER[ 'REQUEST_URI' ] , '?' ) > 0) ? strstr( $_SERVER[ 'REQUEST_URI' ] , '?' , true ) : $_SERVER[ 'REQUEST_URI' ];
+            if (!empty($_SERVER['REQUEST_URI'])) {
+                $path_info = (strpos($_SERVER['REQUEST_URI'], '?') > 0) ? strstr($_SERVER['REQUEST_URI'], '?', true) : $_SERVER['REQUEST_URI'];
             }
         }
 
@@ -103,7 +111,7 @@ class Request implements Request\RequestInterface
      */
     public function getRequestTime()
     {
-        return (isset( $_SERVER[ 'REQUEST_TIME' ] )) ? $_SERVER[ 'REQUEST_TIME' ] : null;
+        return (isset($_SERVER['REQUEST_TIME'])) ? $_SERVER['REQUEST_TIME'] : null;
     }
 
     /**
@@ -112,7 +120,7 @@ class Request implements Request\RequestInterface
      */
     public function getReferer()
     {
-        return (isset( $_SERVER[ 'HTTP_REFERER' ] )) ? $_SERVER[ 'HTTP_REFERER' ] : null;
+        return (isset($_SERVER['HTTP_REFERER'])) ? $_SERVER['HTTP_REFERER'] : null;
     }
 
     /**
@@ -122,7 +130,7 @@ class Request implements Request\RequestInterface
      */
     public function getUserAgent()
     {
-        return (isset( $_SERVER[ 'HTTP_USER_AGENT' ] )) ? $_SERVER[ 'HTTP_USER_AGENT' ] : null;
+        return (isset($_SERVER['HTTP_USER_AGENT'])) ? $_SERVER['HTTP_USER_AGENT'] : null;
     }
 
     /**
@@ -134,10 +142,10 @@ class Request implements Request\RequestInterface
      */
     public function getIp()
     {
-        if ( $this->hasProxy() ) {
-            return $_SERVER[ 'HTTP_X_FORWARDED_FOR' ];
+        if ($this->hasProxy()) {
+            return $_SERVER['HTTP_X_FORWARDED_FOR'];
         } else {
-            return (isset( $_SERVER[ 'REMOTE_ADDR' ] )) ? $_SERVER[ 'REMOTE_ADDR' ] : null;
+            return (isset($_SERVER['REMOTE_ADDR'])) ? $_SERVER['REMOTE_ADDR'] : null;
         }
     }
 
@@ -148,7 +156,7 @@ class Request implements Request\RequestInterface
      */
     public function getLanguage()
     {
-        return (isset( $_SERVER[ "HTTP_ACCEPT_LANGUAGE" ] )) ? $_SERVER[ 'HTTP_ACCEPT_LANGUAGE' ] : null;
+        return (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : null;
     }
 
     /**
@@ -158,7 +166,7 @@ class Request implements Request\RequestInterface
      */
     public function hasProxy()
     {
-        return isset( $_SERVER[ 'HTTP_X_FORWARDED_FOR' ] );
+        return isset($_SERVER['HTTP_X_FORWARDED_FOR']);
     }
 
     /**
@@ -167,7 +175,7 @@ class Request implements Request\RequestInterface
      */
     public function getProxyIp()
     {
-        return (isset( $_SERVER[ 'HTTP_X_FORWARDED_FOR' ] )) ? $_SERVER[ 'REMOTE_ADDR' ] : null;
+        return (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) ? $_SERVER['REMOTE_ADDR'] : null;
     }
 
     /**
@@ -176,7 +184,7 @@ class Request implements Request\RequestInterface
      */
     public function isHttps()
     {
-        return ! (empty( $_SERVER[ 'HTTPS' ] ) || ($_SERVER[ 'HTTPS' ] === 'off' ));
+        return !(empty($_SERVER['HTTPS']) || ($_SERVER['HTTPS'] === 'off' ));
     }
 
     /**
@@ -186,7 +194,7 @@ class Request implements Request\RequestInterface
      */
     public function isXmlHttpRequest()
     {
-        return isset( $_SERVER[ 'HTTP_X_REQUESTED_WITH' ] ) && ($_SERVER[ 'HTTP_X_REQUESTED_WITH' ] === 'XMLHttpRequest');
+        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest');
     }
 
     /**
@@ -196,7 +204,7 @@ class Request implements Request\RequestInterface
      */
     public function isFlash()
     {
-        return isset( $_SERVER[ 'HTTP_X_REQUESTED_WITH' ] ) && ($_SERVER[ 'HTTP_X_REQUESTED_WITH' ] === 'Flash');
+        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && ($_SERVER['HTTP_X_REQUESTED_WITH'] === 'Flash');
     }
 
     /**
@@ -208,11 +216,11 @@ class Request implements Request\RequestInterface
      */
     public function getRequestMethod()
     {
-        $accepted_methods = array( self::METHOD_DELETE , self::METHOD_GET , self::METHOD_HEAD , self::METHOD_OPTIONS , self::METHOD_PATCH , self::METHOD_POST , self::METHOD_PUT , self::METHOD_TRACE );
-        if ( \in_array( $_SERVER[ 'REQUEST_METHOD' ] , $accepted_methods ) ) {
-            return $_SERVER[ 'REQUEST_METHOD' ];
+        $accepted_methods = array(self::METHOD_DELETE, self::METHOD_GET, self::METHOD_HEAD, self::METHOD_OPTIONS, self::METHOD_PATCH, self::METHOD_POST, self::METHOD_PUT, self::METHOD_TRACE);
+        if (\in_array($_SERVER['REQUEST_METHOD'], $accepted_methods)) {
+            return $_SERVER['REQUEST_METHOD'];
         } else {
-            throw new \UnexpectedValueException( $_SERVER[ 'REQUEST_METHOD' ] . 'n\'est pas une méthode valide' );
+            throw new \UnexpectedValueException($_SERVER['REQUEST_METHOD'] . 'n\'est pas une méthode valide');
         }
     }
 
@@ -299,15 +307,15 @@ class Request implements Request\RequestInterface
      * @return string|null|Iridium\Request
      * @throws \BadMethodCallException
      */
-    public function get($name , $value = null)
+    public function get($name, $value = null)
     {
-        if ( ! $this->isGet() ) {
-            throw new \BadMethodCallException( 'calling get() while HTTP verb is not GET' );
+        if (!$this->isGet()) {
+            throw new \BadMethodCallException('calling get() while HTTP verb is not GET');
         }
-        if ( is_null( $value ) ) {
-            return isset( $_GET[ $name ] ) ? $_GET[ $name ] : null;
+        if (is_null($value)) {
+            return isset($_GET[$name]) ? $_GET[$name] : null;
         } else {
-            $_GET[ $name ] = $value;
+            $_GET[$name] = $value;
 
             return $this;
         }
@@ -324,15 +332,15 @@ class Request implements Request\RequestInterface
      * @return string|null|Iridium\Request
      * @throws \BadMethodCallException
      */
-    public function put($name , $value = null)
+    public function put($name, $value = null)
     {
-        if ( ! $this->isPut() ) {
-            throw new \BadMethodCallException( 'calling put() while HTTP verb is not PUT' );
+        if (!$this->isPut()) {
+            throw new \BadMethodCallException('calling put() while HTTP verb is not PUT');
         }
-        if ( is_null( $value ) ) {
-            return isset( $this->put[ $name ] ) ? $this->put[ $name ] : null;
+        if (is_null($value)) {
+            return isset($this->put[$name]) ? $this->put[$name] : null;
         } else {
-            $this->put[ $name ] = $value;
+            $this->put[$name] = $value;
 
             return $this;
         }
@@ -347,15 +355,15 @@ class Request implements Request\RequestInterface
      * @return string|null|Iridium\Request
      * @throws \BadMethodCallException
      */
-    public function post($name , $value = null)
+    public function post($name, $value = null)
     {
-        if ( ! $this->isPost() ) {
-            throw new \BadMethodCallException( 'calling post() while HTTP verb is not POST' );
+        if (!$this->isPost()) {
+            throw new \BadMethodCallException('calling post() while HTTP verb is not POST');
         }
-        if ( is_null( $value ) ) {
-            return isset( $_POST[ $name ] ) ? $_POST[ $name ] : null;
+        if (is_null($value)) {
+            return isset($this->post[$name]) ? $this->post[$name] : null;
         } else {
-            $_POST[ $name ] = $value;
+            $this->post[$name] = $value;
 
             return $this;
         }
@@ -372,15 +380,15 @@ class Request implements Request\RequestInterface
      * @return string|Iridium\Request
      * @throws \BadMethodCallException
      */
-    public function patch($name , $value = null)
+    public function patch($name, $value = null)
     {
-        if ( ! $this->isPatch() ) {
-            throw new \BadMethodCallException( 'calling patch() while HTTP verb is not PATCH' );
+        if (!$this->isPatch()) {
+            throw new \BadMethodCallException('calling patch() while HTTP verb is not PATCH');
         }
-        if ( is_null( $value ) ) {
-            return isset( $this->patch[ $name ] ) ? $this->patch[ $name ] : null;
+        if (is_null($value)) {
+            return isset($this->patch[$name]) ? $this->patch[$name] : null;
         } else {
-            $this->patch[ $name ] = $value;
+            $this->patch[$name] = $value;
 
             return $this;
         }
@@ -397,15 +405,15 @@ class Request implements Request\RequestInterface
      * @return string|Iridium\Request
      * @throws \BadMethodCallException
      */
-    public function delete($name , $value = null)
+    public function delete($name, $value = null)
     {
-        if ( ! $this->isDelete() ) {
-            throw new \BadMethodCallException( 'calling delete() while HTTP verb is not DELETE' );
+        if (!$this->isDelete()) {
+            throw new \BadMethodCallException('calling delete() while HTTP verb is not DELETE');
         }
-        if ( is_null( $value ) ) {
-            return isset( $this->delete[ $name ] ) ? $this->delete[ $name ] : null;
+        if (is_null($value)) {
+            return isset($this->delete[$name]) ? $this->delete[$name] : null;
         } else {
-            $this->delete[ $name ] = $value;
+            $this->delete[$name] = $value;
 
             return $this;
         }
@@ -422,15 +430,15 @@ class Request implements Request\RequestInterface
      * @return string|Iridium\Request
      * @throws \BadMethodCallException
      */
-    public function head($name , $value = null)
+    public function head($name, $value = null)
     {
-        if ( ! $this->isHead() ) {
-            throw new \BadMethodCallException( 'calling head() while HTTP verb is not HEAD' );
+        if (!$this->isHead()) {
+            throw new \BadMethodCallException('calling head() while HTTP verb is not HEAD');
         }
-        if ( is_null( $value ) ) {
-            return isset( $this->head[ $name ] ) ? $this->head[ $name ] : null;
+        if (is_null($value)) {
+            return isset($this->head[$name]) ? $this->head[$name] : null;
         } else {
-            $this->head[ $name ] = $value;
+            $this->head[$name] = $value;
 
             return $this;
         }
@@ -447,15 +455,15 @@ class Request implements Request\RequestInterface
      * @return string|Iridium\Request
      * @throws \BadMethodCallException
      */
-    public function options($name , $value = null)
+    public function options($name, $value = null)
     {
-        if ( ! $this->isOptions() ) {
-            throw new \BadMethodCallException( 'calling options() while HTTP verb is not OPTIONS' );
+        if (!$this->isOptions()) {
+            throw new \BadMethodCallException('calling options() while HTTP verb is not OPTIONS');
         }
-        if ( is_null( $value ) ) {
-            return isset( $this->options[ $name ] ) ? $this->options[ $name ] : null;
+        if (is_null($value)) {
+            return isset($this->options[$name]) ? $this->options[$name] : null;
         } else {
-            $this->options[ $name ] = $value;
+            $this->options[$name] = $value;
 
             return $this;
         }
@@ -472,15 +480,15 @@ class Request implements Request\RequestInterface
      * @return string|Iridium\Request
      * @throws \BadMethodCallException
      */
-    public function trace($name , $value = null)
+    public function trace($name, $value = null)
     {
-        if ( ! $this->isTrace() ) {
-            throw new \BadMethodCallException( 'calling trace() while HTTP verb is not TRACE' );
+        if (!$this->isTrace()) {
+            throw new \BadMethodCallException('calling trace() while HTTP verb is not TRACE');
         }
-        if ( is_null( $value ) ) {
-            return isset( $this->trace[ $name ] ) ? $this->trace[ $name ] : null;
+        if (is_null($value)) {
+            return isset($this->trace[$name]) ? $this->trace[$name] : null;
         } else {
-            $this->trace[ $name ] = $value;
+            $this->trace[$name] = $value;
 
             return $this;
         }
@@ -494,7 +502,7 @@ class Request implements Request\RequestInterface
      */
     public function cookie($name)
     {
-        return isset( $_COOKIE[ $name ] ) ? $_COOKIE[ $name ] : null;
+        return isset($_COOKIE[$name]) ? $_COOKIE[$name] : null;
     }
 
 }
