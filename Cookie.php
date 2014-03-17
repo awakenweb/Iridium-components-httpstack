@@ -42,18 +42,28 @@ class Cookie implements Cookie\CookieInterface
      * @param  string                    $name
      * @throws \InvalidArgumentException
      */
-    public function __construct($name)
+    public function __construct($name, $expire = null, $path = null, $domain = null, $secure = null, $httponly = null)
     {
-        if ( empty( $name ) || $name === '' ) {
-            throw new \InvalidArgumentException( 'Un nom de cookie ne peut pas être vide' );
+        if (empty($name) || $name === '') {
+            throw new \InvalidArgumentException('Un nom de cookie ne peut pas être vide');
         }
         $this->name = $name;
 
-        $this->expire();
-        $this->path();
-        $this->domain();
-        $this->secure();
-        $this->httponly();
+        if (!is_null($expire)) {
+            $this->expire($expire);
+        }
+        if (!is_null($path)) {
+            $this->path($path);
+        }
+        if (!is_null($domain)) {
+            $this->domain($domain);
+        }
+        if (!is_null($secure)) {
+            $this->secure($secure);
+        }
+        if (!is_null($httponly)) {
+            $this->httponly($httponly);
+        }
     }
 
     /**
@@ -141,7 +151,7 @@ class Cookie implements Cookie\CookieInterface
      */
     public function send()
     {
-        return setcookie( $this->name , $this->value , $this->expire , $this->path , $this->domain , $this->secure , $this->httponly );
+        return setcookie($this->name, $this->value, $this->expire, $this->path, $this->domain, $this->secure, $this->httponly);
     }
 
     /**
@@ -151,13 +161,11 @@ class Cookie implements Cookie\CookieInterface
      */
     public function __toString()
     {
-
-        $date = new \DateTime( '@' . $this->expire , new \DateTimeZone( 'Europe/Paris' ) );
-        $date = $date->format( \DateTime::COOKIE );
+        $date = date(DATE_COOKIE, $this->expire);
 
         $s = "Set-Cookie: {$this->name}={$this->value}; expires=$date";
-        $s.= is_null( $this->path ) || empty( $this->path ) ? '' : "; path={$this->path}";
-        $s.= is_null( $this->domain ) || empty( $this->domain ) ? '' : "; domain = {$this->domain}";
+        $s.= is_null($this->path) || empty($this->path) ? '' : "; path={$this->path}";
+        $s.= is_null($this->domain) || empty($this->domain) ? '' : "; domain = {$this->domain}";
         $s.= $this->secure ? "; secure" : '';
         $s.= $this->httponly ? "; httponly" : '';
 

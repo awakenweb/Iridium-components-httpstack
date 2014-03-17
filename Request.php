@@ -39,13 +39,13 @@ class Request implements Request\RequestInterface
     const METHOD_HEAD    = "HEAD";
 
     protected $requestString = '';
-    protected $put           = array();
-    protected $patch         = array();
-    protected $delete        = array();
-    protected $head          = array();
-    protected $options       = array();
-    protected $trace         = array();
-    protected $post          = array();
+    protected $post;
+    protected $put;
+    protected $patch;
+    protected $delete;
+    protected $head;
+    protected $options;
+    protected $trace;
 
     /**
      * saves the URI
@@ -58,31 +58,110 @@ class Request implements Request\RequestInterface
     {
         switch ($this->getRequestMethod()) {
             case self::METHOD_POST:
-                if (empty($_POST)) {
-                    $this->post = json_decode(file_get_contents('php://input'));
+                $input = file_get_contents('php://input');
+                if (empty($_POST) && $this->isJson($input)) {
+                    $this->post = json_decode($input, true);
+                } else {
+                    $this->input = $_POST;
                 }
                 if (is_null($this->post)) {
-                    $this->post = $_POST;
+                    $this->post = array();
                 }
                 break;
+
             case self::METHOD_PUT :
-                parse_str(file_get_contents('php://input'), $this->put);
+                $input = file_get_contents('php://input');
+                if ($this->isJson($input)) {
+                    $this->put = json_decode($input, true);
+                } elseif (is_string($input)) {
+                    parse_str($input, $this->put);
+                }
+                if (is_null($this->put)) {
+                    $this->put = array();
+                }
                 break;
+
             case self::METHOD_PATCH :
-                parse_str(file_get_contents('php://input'), $this->patch);
+                $input = file_get_contents('php://input');
+                if ($this->isJson($input)) {
+                    $this->patch = json_decode($input, true);
+                } elseif (is_string($input)) {
+                    parse_str($input, $this->patch);
+                }
+                if (is_null($this->patch)) {
+                    $this->patch = array();
+                }
                 break;
+
             case self::METHOD_DELETE :
-                parse_str(file_get_contents('php://input'), $this->delete);
+                $input = file_get_contents('php://input');
+                if ($this->isJson($input)) {
+                    $this->delete = json_decode($input, true);
+                } elseif (is_string($input)) {
+                    parse_str($input, $this->delete);
+                }
+                if (is_null($this->delete)) {
+                    $this->delete = array();
+                }
                 break;
+
             case self::METHOD_TRACE :
-                parse_str(file_get_contents('php://input'), $this->trace);
+                $input = file_get_contents('php://input');
+                if ($this->isJson($input)) {
+                    $this->trace = json_decode($input, true);
+                } elseif (is_string($input)) {
+                    parse_str($input, $this->trace);
+                }
+                if (is_null($this->trace)) {
+                    $this->trace = array();
+                }
                 break;
+
             case self::METHOD_HEAD :
-                parse_str(file_get_contents('php://input'), $this->head);
+                $input = file_get_contents('php://input');
+                if ($this->isJson($input)) {
+                    $this->head = json_decode($input, true);
+                } elseif (is_string($input)) {
+                    parse_str($input, $this->head);
+                }
+                if (is_null($this->head)) {
+                    $this->head = array();
+                }
                 break;
+
             case self::METHOD_OPTIONS :
-                parse_str(file_get_contents('php://input'), $this->options);
+                $input = file_get_contents('php://input');
+                if ($this->isJson($input)) {
+                    $this->options = json_decode($input, true);
+                } elseif (is_string($input)) {
+                    parse_str($input, $this->options);
+                }
+                if (is_null($this->options)) {
+                    $this->options = array();
+                }
                 break;
+        }
+    }
+
+    /**
+     * check if a JSON string can be converted to a valid PHP Object
+     *
+     * @access protected
+     *
+     * @param string $json
+     * @param bool $assoc_array
+     * @return bool
+     */
+    protected function isJson($json, $assoc_array = FALSE)
+    {
+        // decode the JSON data
+        $temp = json_decode($json, $assoc_array);
+
+        // switch and check possible JSON errors
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return true;
+        } else {
+            return false;
         }
     }
 

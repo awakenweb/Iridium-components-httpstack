@@ -57,7 +57,7 @@ $request->getRequestTime();
 $request->getReferer();
 $request->getUserAgent();
 $request->getLanguage();
- 
+
 // the following methods are used to get the IP address of
 // the client. If a proxy is detected via the HTTP_X_FORWARDED_FOR
 // header, getIp() will return the true IP, and Proxy IP will be
@@ -79,12 +79,13 @@ $request->getRequestMethod();
 $request->isPost();
 $request->post( 'test', 'I am defining a value' ); // setter
 $request->post('test'); // getter. Will return the string 'I am defining a value'
+$request->post(); // getter. Will return all values from POST as an array.
 
 // alias for $_COOKIE[$name]
 $request->cookie( $name );
-
 ```
-HttpStack recognizes the following HTTP Verbs that you can use with 
+
+HttpStack recognizes the following HTTP Verbs that you can use with
 - **get**:      `isGet()` and `get()`
 - **put**:      `isPut()` and `put()`
 - **post**:     `isPost()` and `post()`
@@ -93,6 +94,8 @@ HttpStack recognizes the following HTTP Verbs that you can use with
 - **head**:     `isHead()` and `head()`
 - **trace**:    `isTrace()` and `trace()`
 - **options**:  `isOptions()` and `options()`
+
+These methods parse the HTTP request for parameters. You can send parameters as either `application/x-www-form-urlencoded` or `application/json`. Json will automatically be decoded and forced to __array__ representation.
 
 Response
 --------
